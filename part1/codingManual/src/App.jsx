@@ -16,13 +16,22 @@ const Button = (props) => {
 }
 
 
-
 const App = () => {
     const [counter, setCounter] = useState(0)
+    console.log('renderizando el contador, valor: ',counter)
 
-    const increaseByOne = () => setCounter(counter + 1)
-    const decreaseByOne = () => setCounter(counter - 1)
-    const setZero = () => setCounter(0)
+    const increaseByOne = () => {
+        console.log('incrementando el contador, valor anterior: ', counter)
+        setCounter(counter + 1)
+    }
+    const decreaseByOne = () => {
+        console.log('decrementando el contador, valor anterior: ' , counter)
+        setCounter(counter - 1)
+    }
+    const setZero = () => {
+        console.log('reiniciando el contador a cero, valor anterior: ', counter)
+        setCounter(setCounter(0))
+    }
 
     return (
         <div>
