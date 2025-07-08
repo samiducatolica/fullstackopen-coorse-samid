@@ -1,9 +1,11 @@
-const  Hello = ({name,age}) => {
+import {useState} from 'react'
 
-     const bornYear = ()=>{
-         const yearNow = new Date().getFullYear();
-         return yearNow - age
-     }
+const Hello = ({name, age}) => {
+
+    const bornYear = () => {
+        const yearNow = new Date().getFullYear();
+        return yearNow - age
+    }
 
     return (
         <div>
@@ -17,7 +19,7 @@ const  Hello = ({name,age}) => {
     )
 }
 
-const  Footer= () =>{
+const Footer = () => {
     return (
         <div>
             greating app created by <a href='https://github.com/mluukkay'>mluukkay</a>
@@ -25,16 +27,19 @@ const  Footer= () =>{
         </div>
     )
 }
-const  App = () => {
-    const  name = 'Peter'
-    const  age =10
+const App = () => {
+    const [counter, setCounter] = useState(0)
 
-  return (
-      <div>
-          <h1>Greetings</h1>
-          <Hello name='Maya' age={26+10}/>
-          <Hello name={name} age={age}/>
-      </div>
-  )
+    setTimeout(() => {
+        setCounter(counter + 1)
+    },1000)
+
+    console.log('rendering...',counter)
+
+    return (
+        <div>
+            {counter}
+        </div>
+    )
 }
 export default App
