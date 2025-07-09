@@ -1,47 +1,32 @@
 import {useState} from 'react'
 
-const Display = ({counter}) =>  <div>{counter}</div>
+const Display = ({counter}) => <div>{counter}</div>
 
 
-
-const Button = ({onClick,text}) => (<button onClick={onClick}>{text}</button>)
-
+const Button = ({onClick, text}) => (<button onClick={onClick}>{text}</button>)
 
 
 const App = () => {
-    const [counter, setCounter] = useState(0)
-    console.log('renderizando el contador, valor: ',counter)
+    const [clicks,setClicks] = useState(
+    {
+        left: 0, right: 0
+    })
 
-    const increaseByOne = () => {
-        console.log('incrementando el contador, valor anterior: ', counter)
-        setCounter(counter + 1)
-    }
-    const decreaseByOne = () => {
-        console.log('decrementando el contador, valor anterior: ' , counter)
-        setCounter(counter - 1)
-    }
-    const setZero = () => {
-        console.log('reiniciando el contador a cero, valor anterior: ', counter)
-        setCounter(setCounter(0))
-    }
+    const handleLeftClick = () =>
+        setClicks({...clicks, left: clicks.left + 1})
+
+
+    const handleRightClick = () =>
+        setClicks({...clicks, right: clicks.right + 1})
+
 
     return (
         <div>
-            <h2>Passando el estado a componentes hijos</h2>
-            <Display counter={counter}/>
-            <Button
-                onClick={increaseByOne}
-                text='plus'
-            />
-            <Button
-                onClick={setZero}
-                text='zero'
-            />
-
-            <Button
-                onClick={decreaseByOne}
-                text='minus'
-            />
+            <h2>Estado complejo</h2>
+            {clicks.left}
+            <button onClick={handleLeftClick}>left</button>
+            <button onClick={handleRightClick}>right</button>
+            {clicks.right}
         </div>
     )
 }
