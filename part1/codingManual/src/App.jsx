@@ -1,10 +1,27 @@
 import {useState} from 'react'
 
-const Display = ({counter}) => <div>{counter}</div>
+// const Display = ({counter}) => <div>{counter}</div>
 
+const Button = ({handleClick, text}) => (
+    <button onClick={handleClick}>{text}</button>
+)
 
-const Button = ({onClick, text}) => (<button onClick={onClick}>{text}</button>)
+const History = (props)=> {
 
+    if (props.allClicks.length === 0) {
+        return(
+            <div>
+                The app is used by pressing the buttons.
+            </div>
+        )
+    }
+
+    return (
+        <div>
+            Button press history: {props.allClicks.join(' ')}
+        </div>
+    )
+}
 
 const App = () => {
 
@@ -20,26 +37,23 @@ const App = () => {
         setTotal(updateLeft +right)
     }
 
-
-
     const handleRightClick = () =>{
         setAll(allClicks.concat('R'))
         const updateRight= right+1
         setRight(updateRight)
-        setTotal(left +updateRight)
+        setTotal(updateRight +left)
+
     }
-
-
 
     return (
         <div>
-            <h2>La actualización del estado es asíncrona</h2>
+            <h2>Renderizado condicional</h2>
             {left}
-            <button onClick={handleLeftClick}>left</button>
-            <button onClick={handleRightClick}>right</button>
+            <Button handleClick={handleLeftClick} text='left'/>
+            <Button handleClick={handleRightClick} text='right'/>
             {right}
-            <p>{allClicks.join(' ')}</p>
-            <p>Total de clicks: {total}</p>
+            <p>{total}</p>
+            <History allClicks={allClicks}/>
         </div>
     )
 }
