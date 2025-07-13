@@ -29,7 +29,7 @@ const App = () => {
 
     const [value, setValue] = useState(10)
 
-    const setToValue = (newValue) => () =>{
+    const setToValue = (newValue) => {
             console.log('value now',newValue)
             setValue(newValue)
     }
@@ -39,9 +39,9 @@ const App = () => {
         <div>
             {value}
             <h2>Una funcion que retorna una funcion</h2>
-            <button onClick={setToValue(1000)}>Thousand</button>
-            <button onClick={setToValue(0)}>Reset</button>
-            <button onClick={setToValue(value+1)}>Increment</button>
+            <button onClick={() =>setToValue(1000)}>Thousand</button>
+            <button onClick={() =>setToValue(0)}>Reset</button>
+            <button onClick={() =>setToValue(value+1)}>Increment</button>
         </div>
     )
 }
