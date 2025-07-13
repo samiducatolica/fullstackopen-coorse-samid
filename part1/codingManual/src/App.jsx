@@ -2,10 +2,10 @@ import {useState} from 'react'
 
 // const Display = ({counter}) => <div>{counter}</div>
 
-const Button = ({handleClick, text}) => {
-    return (
-        <button onClick={handleClick}>{text}</button>
-    )
+const Button = (props) => {
+    <button onClick={props.handleClick}>
+        {props.text}
+    </button>
 }
 
 const History = (props) => {
@@ -30,18 +30,18 @@ const App = () => {
     const [value, setValue] = useState(10)
 
     const setToValue = (newValue) => {
-            console.log('value now',newValue)
-            setValue(newValue)
+        console.log('value now', newValue)
+        setValue(newValue)
     }
 
 
     return (
         <div>
             {value}
-            <h2>Una funcion que retorna una funcion</h2>
-            <button onClick={() =>setToValue(1000)}>Thousand</button>
-            <button onClick={() =>setToValue(0)}>Reset</button>
-            <button onClick={() =>setToValue(value+1)}>Increment</button>
+            <h2>Pasando controladores de eventos a componentes hijos</h2>
+            <button onClick={() => setToValue(1000)}>Thousand</button>
+            <button onClick={() => setToValue(0)}>Reset</button>
+            <button onClick={() => setToValue(value + 1)}>Increment</button>
         </div>
     )
 }
