@@ -5,24 +5,35 @@ const Button = (props) => (
         {props.text}
     </button>
 )
+const StatisticLine = (props) => {
+    return (
+        <tr>
+            <td>{props.text}</td><td>{props.value}{props.medida}</td>
+        </tr>
+    )
+}
 const Statistics = (props) => {
-
 
     if (props.total === 0) {
         return (
             <div>
-                No data for statistics
+                <h2>Statistics</h2>
+                No feedback given
             </div>)
     }
     return (
         <div>
             <h2>Statistics</h2>
-            Good: {props.good}<br/>
-            Neutral: {props.neutral}<br/>
-            Bad: {props.bad}<br/>
-            All: {props.total}<br/>
-            Average: {props.stadisticsAverage}<br/>
-            Positive: {props.stadisticsPositive} %
+            <table>
+                <tbody>
+                <StatisticLine text='Good' value={props.good}/>
+                <StatisticLine text='Neutral' value={props.neutral}/>
+                <StatisticLine text='Bad' value={props.bad}/>
+                <StatisticLine text='All' value={props.total}/>
+                <StatisticLine text='Average' value={props.stadisticsAverage}/>
+                <StatisticLine text='Positive' value={props.stadisticsPositive} medida=' %'/>
+                </tbody>
+            </table>
         </div>
     )
 }
