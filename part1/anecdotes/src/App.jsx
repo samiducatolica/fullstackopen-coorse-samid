@@ -14,16 +14,31 @@ function App() {
     ]
 
     const [selected, setSelected] = useState(0)
+    const [votos,setVotos] = useState(new Uint8Array(8))
 
+    // Copia de votos para evitar mutaciones directas del estado
+    const copy = [...votos]
+
+    // Función para seleccionar un anécdota aleatoria
     const randomAnecdote = () => {
         const randomIndex = Math.floor(Math.random() * anecdotes.length)
         setSelected(randomIndex);
     }
 
+    // Función para manejar el voto
+    const handleVote = () => {
+        copy[selected] += 1
+        setVotos(copy)
+    }
+
+
+
   return (
     <div>
         <p>{anecdotes[selected]}</p>
+        <button onClick={handleVote}>Vote</button>
         <button onClick={randomAnecdote}>Next Anecdote</button>
+        <p>Has {votos[selected]} votes</p>
     </div>
   )
 }
