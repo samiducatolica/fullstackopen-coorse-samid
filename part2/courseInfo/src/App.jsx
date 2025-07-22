@@ -1,7 +1,7 @@
 const Header = (props) => {
     //  console.log(props)
     return (
-        <h1>{props.course.name}</h1>
+        <h2>{props.course.name}</h2>
     )
 };
 
@@ -23,28 +23,32 @@ const Total = (props) => {
     return (
         <div>
             <p>
-                Total of {props.course.parts.reduce((sum, value) =>{
-                    return sum + value.exercises
-                },0)
-            } exercises
+                <strong>
+                    Total of {
+                        props.course.parts.reduce((sum, value) => {
+                        return sum + value.exercises
+                    }, 0)
+                    } exercises
+                </strong>
             </p>
         </div>
     )
 }
 
-const Course = (props) => {
+const Course = ({props}) => {
     // console.log(props)
     return (
         <div>
             <Header course={props.course}/>
             <Content course={props.course}/>
             <Total course={props.course}/>
+
         </div>
     )
 }
 
 const App = () => {
-    const course = {
+    const course = [{
         id: 1,
         name: 'Half Stack aplication development',
         parts: [
@@ -62,12 +66,37 @@ const App = () => {
                 name: 'State of a component',
                 exercises: 14,
                 id: 3
+            },
+            {
+                name: 'Redux',
+                exercises: 11,
+                id: 4
             }
         ]
-    }
+    }, {
+        id: 2,
+        name: 'Node.js',
+        parts: [
+            {
+                name: 'Routing',
+                exercises: 3,
+                id: 1
+            },
+            {
+                name: 'Middlewares',
+                exercises: 7,
+                id: 2
+            }
+        ]
+    }]
 
     return (
-        <Course course={course}/>
+        <div>
+            <h1>Web development curriculum</h1>
+            {course.map(item =>
+                <Course key={item.id} props={{course: item}} />
+            )}
+        </div>
     )
 }
 
