@@ -47,7 +47,7 @@ const Name = (props) => {
 const PersonsList = ({persons, findName}) => {
     if (!findName) {
         // console.log('No hay nombre para filtrar');
-        console.log('FilteredPersons', persons, findName);
+        // console.log('FilteredPersons', persons, findName);
         return (
             <div>
                 <strong>Debug</strong>:
@@ -76,6 +76,7 @@ const App = () => {
     const personasApi =() => {
         axios.get('http://localhost:3001/persons')
             .then((respuesta) =>{
+                // console.log('Respuesta de la API:', respuesta.data);
                 setPersons(respuesta.data)
             })
     }
@@ -104,20 +105,23 @@ const App = () => {
     //Envio y validacion de formulario
     const handleNameSubmit = (event) => {
         event.preventDefault();
-        const NewPerson = {
+        const newPerson = {
             name: newName,
             number: newNumber,
-            id: persons.length + 1
         }
         //variable de validacion
-        const validation = persons.findIndex(p => p.name === NewPerson.name);
+        const validation = persons.findIndex(p => p.name === newPerson.name);
 
         //validacion de nombre
         if (validation !== -1) {
-            alert(`${NewPerson.name} ya existe en el ditectorio`);
+            alert(`${newPerson.name} ya existe en el ditectorio`);
         } else {
             //crea nuevo contacto
-            setPersons(persons.concat(NewPerson));
+            axios.post('http://localhost:3001/persons', newPerson)
+                .then(respuesta => {
+                    // console.log('Respuesta de la API al crear:', respuesta.data);
+                    setPersons(persons.concat(respuesta.data))
+                })
             setNewName('')
             setNewNumber('');
         }
