@@ -23,12 +23,12 @@
     {
       "id": "0b2a",
       "content": "Java es usado en entornos empresariales",
-      "important": false
+      "important": true
     },
     {
       "id": "0ba0",
       "content": "Post es usado para enviar datos",
-      "important": false
+      "important": true
     }
   ]
 }
