@@ -1,4 +1,5 @@
-import {useState} from "react";
+import {useState, useEffect} from "react";
+import axios from "axios";
 
 const FormNewPerson = (props) => {
     return (
@@ -46,11 +47,11 @@ const Name = (props) => {
 const PersonsList = ({persons, findName}) => {
     if (!findName) {
         // console.log('No hay nombre para filtrar');
-        // console.log('FilteredPersons', persons, findName);
+        console.log('FilteredPersons', persons, findName);
         return (
             <div>
                 <strong>Debug</strong>:
-                {persons.map((person) => (<Name key={person.id} name={person.name} telefono={person.telefono}/>))}
+                {persons.map((person) => (<Name key={person.id} name={person.name} telefono={person.number}/>))}
             </div>
         )
     } else {
@@ -59,24 +60,27 @@ const PersonsList = ({persons, findName}) => {
         return (
             <div><strong>Debug</strong>:
                 {filteredPersons.map((person) => (
-                    <Name key={person.id} name={person.name} telefono={person.telefono}/>))}
+                    <Name key={person.id} name={person.name} telefono={person.number}/>))}
             </div>
         )
     }
 }
 
 const App = () => {
-    const [persons, setPersons] = useState([
-        {name: 'Samid', telefono: '123456789', id: 1},
-        {name: 'Amaury', telefono: '123456789', id: 2},
-        {name: 'Jose', telefono: '123456789', id: 3},
-        {name: 'Aberto', telefono: '123456789', id: 4},
-        {name: 'Maria', telefono: '123456789', id: 5},
-    ])
+    const [persons, setPersons] = useState([ ])
 
     const [newName, setNewName] = useState('');
     const [newNumber, setNewNumber] = useState('');
     const [findName, setFindName] = useState('');
+
+    const personasApi =() => {
+        axios.get('http://localhost:3001/persons')
+            .then((respuesta) =>{
+                setPersons(respuesta.data)
+            })
+    }
+
+    useEffect(personasApi, []);
 
     //Manejadores de eventos
     // Nombre
@@ -102,7 +106,7 @@ const App = () => {
         event.preventDefault();
         const NewPerson = {
             name: newName,
-            telefono: newNumber,
+            number: newNumber,
             id: persons.length + 1
         }
         //variable de validacion
