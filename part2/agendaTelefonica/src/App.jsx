@@ -1,5 +1,5 @@
 import {useState, useEffect} from "react";
-import axios from "axios";
+import personService from './services/persons.js'
 
 const FormNewPerson = (props) => {
     return (
@@ -74,10 +74,10 @@ const App = () => {
     const [findName, setFindName] = useState('');
 
     const personasApi =() => {
-        axios.get('http://localhost:3001/persons')
+        personService.getAll()
             .then((respuesta) =>{
-                // console.log('Respuesta de la API:', respuesta.data);
-                setPersons(respuesta.data)
+                // console.log('Respuesta de la API:', respuesta);
+                setPersons(respuesta)
             })
     }
 
@@ -117,10 +117,10 @@ const App = () => {
             alert(`${newPerson.name} ya existe en el ditectorio`);
         } else {
             //crea nuevo contacto
-            axios.post('http://localhost:3001/persons', newPerson)
+            personService.create(newPerson)
                 .then(respuesta => {
                     // console.log('Respuesta de la API al crear:', respuesta.data);
-                    setPersons(persons.concat(respuesta.data))
+                    setPersons(persons.concat(respuesta))
                 })
             setNewName('')
             setNewNumber('');
