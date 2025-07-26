@@ -1,5 +1,14 @@
-
 part2/codingPart2/.idea/
 part2/agendaTelefonica/.vite/
 part2/codingPart2/node_modules/
 part2/agendaTelefonica/.vite/
+part1/anecdotes/.idea/*
+part1/anecdotes/node_modules/*
+part2/agendaTelefonica/.idea/*
+part2/agendaTelefonica/.vite/*
+part2/agendaTelefonica/node_modules/*
+part2/codingPart2/.idea/*
+part2/codingPart2/.vite/*
+part2/codingPart2/node_modules/*
+part2/courseInfo/.idea/*
+refs/heads/unicafe
