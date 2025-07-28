@@ -71,11 +71,23 @@ const PersonsList = ({persons, findName,deletePersons}) => {
     }
 }
 
+const Notification = ({message,tipeMessage}) => {
+    if (message === null) {
+        return null
+    }
+    return(
+        <div className={tipeMessage}>
+            {message}
+        </div>
+    )
+}
 const App = () => {
     const [persons, setPersons] = useState([ ])
     const [newName, setNewName] = useState('');
     const [newNumber, setNewNumber] = useState('');
     const [findName, setFindName] = useState('');
+    const [message,setMessage] = useState(null);
+    const[typeMessage, setTypeMessage] = useState('')
 
 
     const deletePersonOf = (id) => {
@@ -143,6 +155,11 @@ const App = () => {
                     setPersons(persons.map(p => p.id !== idPerson ? p : respuesta))
                     setNewName('')
                     setNewNumber('')
+                    setMessage('Número actualizado correctamente')
+                    setTypeMessage('success')
+                    setTimeout(() => {
+                        setMessage(null)//limpia el mensaje de error despues de 5 segundos
+                    },5000)
                 })
         } else {
             //crea nuevo contacto
@@ -153,6 +170,11 @@ const App = () => {
                 })
             setNewName('')
             setNewNumber('');
+            setMessage('Contacto creado correctamente')
+            setTypeMessage('success')
+            setTimeout(() => {
+                setMessage(null)
+            },5000)
         }
     }//1.86 m vencido
 
@@ -163,6 +185,7 @@ const App = () => {
             <h2>Phonebook</h2>
             <Filter findName={findName} handleFindChange={handleFindChange}/>
             <h2>Agregar un nuevo registro</h2>
+            <Notification message={message} tipeMessage={typeMessage}/>
             <FormNewPerson
                 newName={newName}
                 newNumber={newNumber}
