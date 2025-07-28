@@ -71,7 +71,6 @@ const PersonsList = ({persons, findName,deletePersons}) => {
     }
 }
 
-
 const App = () => {
     const [persons, setPersons] = useState([ ])
     const [newName, setNewName] = useState('');
@@ -131,7 +130,20 @@ const App = () => {
 
         //validacion de nombre
         if (validation !== -1) {
-            alert(`${newPerson.name} ya existe en el ditectorio`);
+            //obtierne el id de la persona en bd
+            const idPerson = persons[validation].id
+
+            confirm(`${newPerson.name} ya existe en el ditectorio
+            ¿Desea actualizar el número de ${newPerson.name}?`) &&
+
+            //actualiza el numero de telefono
+            personService.update(newPerson,idPerson)
+                .then(respuesta =>{
+                    // console.log('Respuesta de la API al actualizar:', respuesta)
+                    setPersons(persons.map(p => p.id !== idPerson ? p : respuesta))
+                    setNewName('')
+                    setNewNumber('')
+                })
         } else {
             //crea nuevo contacto
             personService.create(newPerson)
