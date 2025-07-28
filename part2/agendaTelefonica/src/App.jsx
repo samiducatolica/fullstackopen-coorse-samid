@@ -38,20 +38,25 @@ const Name = (props) => {
     // console.log('Comp Name', props);
     return (
         <div>
-            <p>{props.name} - {props.telefono} </p>
-
+            {props.name} - {props.telefono}  <button onClick={props.deletePerson}>Borrar</button>
         </div>
     )
 }
 
-const PersonsList = ({persons, findName}) => {
+const PersonsList = ({persons, findName,deletePersons}) => {
     if (!findName) {
-        // console.log('No hay nombre para filtrar');
-        // console.log('FilteredPersons', persons, findName);
         return (
             <div>
                 <strong>Debug</strong>:
-                {persons.map((person) => (<Name key={person.id} name={person.name} telefono={person.number}/>))}
+                {persons.map((person) => (
+                    <Name key={person.id}
+                          name={person.name}
+                          telefono={person.number}
+                          deletePerson={() => deletePersons(person.id)}
+                        />
+                ))
+                }
+
             </div>
         )
     } else {
@@ -66,12 +71,24 @@ const PersonsList = ({persons, findName}) => {
     }
 }
 
+
 const App = () => {
     const [persons, setPersons] = useState([ ])
-
     const [newName, setNewName] = useState('');
     const [newNumber, setNewNumber] = useState('');
     const [findName, setFindName] = useState('');
+
+
+    const deletePersonOf = (id) => {
+        if(window.confirm('¿Seguro que quieres borrar este contacto?')) {
+            personService.remove(id)
+                .then(respose => {
+                    console.log('Respuesta de la API al borrar:', respose);
+                    setPersons(persons.filter(persons=> persons.id !== id))
+                })
+        }
+
+    }
 
     const personasApi =() => {
         personService.getAll()
@@ -127,6 +144,8 @@ const App = () => {
         }
     }//1.86 m vencido
 
+
+
     return (
         <div>
             <h2>Phonebook</h2>
@@ -140,7 +159,7 @@ const App = () => {
                 handleNameSubmit={handleNameSubmit}
             />
             <h2>Numbers</h2>
-            <PersonsList persons={persons} findName={findName}/>
+            <PersonsList persons={persons} findName={findName} deletePersons={deletePersonOf}/>
 
 
         </div>
