@@ -2,12 +2,37 @@ import {useState, useEffect} from "react"
 import Note from './components/Note'
 import noteService from './services/notes.js'
 
+const Notification = ({message}) => {
+    if (message === null) {
+        return null
+    }
+    return (
+        <div className="error">
+            {message}
+        </div>
+    )
+}
+
+const Footer = () => {
+    const footerStyle = {
+        color: 'green',
+        fontStyle: 'italic',
+        fontSize: 16
+    }
+    return (
+        <div style={footerStyle}>
+            <br/>
+            <em>Note app, Department of Computer Science, University of Helsinki 2025</em>
+        </div>
+    )
+}
 
 const App = () => {
 
     const [notes, setNotes] = useState([])
     const [newNote, setNewNote] = useState('a new note')
     const [showAll, setShowAll] = useState(true)
+    const [errorMessage, setErrorMessage] = useState('some error happened...')
 
     const hook = () => {
         // console.log('effect')
@@ -53,16 +78,21 @@ const App = () => {
                 setNotes(notes.map(note => note.id !== id ? note : returnNote))
             })
             .catch(error =>{
-                alert(`the note '${note.content} was already deleted from server`)
+                setErrorMessage(
+                    `Note '${note.content}' ya ha sido borrada del servidor.`
+                )
+                setTimeout(() =>{setErrorMessage(null)},5000)
                 setNotes(notes.filter(n => n.id !== id))
             })
     }
+
 
     const notesToShow = showAll ? notes : notes.filter(note => note.important)
 
     return (
         <div>
             <h1>Notes</h1>
+            <Notification message={errorMessage}/>
             <div>
                 <button onClick={() => setShowAll(!showAll)}>
                     show {showAll ? 'important' : 'all'}
@@ -83,6 +113,7 @@ const App = () => {
                 />
                 <button type="submit">Save</button>
             </form>
+            <Footer/>
         </div>
     )
 }
