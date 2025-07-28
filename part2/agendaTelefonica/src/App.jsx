@@ -38,12 +38,13 @@ const Name = (props) => {
     // console.log('Comp Name', props);
     return (
         <div>
-            {props.name} - {props.telefono}  <button onClick={props.deletePerson}>Borrar</button>
+            {props.name} - {props.telefono}
+            <button onClick={props.deletePerson}>Borrar</button>
         </div>
     )
 }
 
-const PersonsList = ({persons, findName,deletePersons}) => {
+const PersonsList = ({persons, findName, deletePersons}) => {
     if (!findName) {
         return (
             <div>
@@ -53,7 +54,7 @@ const PersonsList = ({persons, findName,deletePersons}) => {
                           name={person.name}
                           telefono={person.number}
                           deletePerson={() => deletePersons(person.id)}
-                        />
+                    />
                 ))
                 }
 
@@ -71,39 +72,40 @@ const PersonsList = ({persons, findName,deletePersons}) => {
     }
 }
 
-const Notification = ({message,tipeMessage}) => {
+const Notification = ({message, tipeMessage}) => {
     if (message === null) {
         return null
     }
-    return(
+    return (
         <div className={tipeMessage}>
             {message}
         </div>
     )
 }
+
 const App = () => {
-    const [persons, setPersons] = useState([ ])
+    const [persons, setPersons] = useState([])
     const [newName, setNewName] = useState('');
     const [newNumber, setNewNumber] = useState('');
     const [findName, setFindName] = useState('');
-    const [message,setMessage] = useState(null);
-    const[typeMessage, setTypeMessage] = useState('')
+    const [message, setMessage] = useState(null);
+    const [typeMessage, setTypeMessage] = useState('')
 
 
     const deletePersonOf = (id) => {
-        if(window.confirm('¿Seguro que quieres borrar este contacto?')) {
+        if (window.confirm('¿Seguro que quieres borrar este contacto?')) {
             personService.remove(id)
                 .then(respose => {
                     console.log('Respuesta de la API al borrar:', respose);
-                    setPersons(persons.filter(persons=> persons.id !== id))
+                    setPersons(persons.filter(persons => persons.id !== id))
                 })
         }
 
     }
 
-    const personasApi =() => {
+    const personasApi = () => {
         personService.getAll()
-            .then((respuesta) =>{
+            .then((respuesta) => {
                 // console.log('Respuesta de la API:', respuesta);
                 setPersons(respuesta)
             })
@@ -149,8 +151,8 @@ const App = () => {
             ¿Desea actualizar el número de ${newPerson.name}?`) &&
 
             //actualiza el numero de telefono
-            personService.update(newPerson,idPerson)
-                .then(respuesta =>{
+            personService.update(newPerson, idPerson)
+                .then(respuesta => {
                     // console.log('Respuesta de la API al actualizar:', respuesta)
                     setPersons(persons.map(p => p.id !== idPerson ? p : respuesta))
                     setNewName('')
@@ -159,8 +161,19 @@ const App = () => {
                     setTypeMessage('success')
                     setTimeout(() => {
                         setMessage(null)//limpia el mensaje de error despues de 5 segundos
-                    },5000)
+                    }, 5000)
                 })
+                .catch(error => {
+                        setTypeMessage('error')
+                        setMessage(`Error: ${newPerson.name} ya se encuentra eliminado de la base de datos`)
+                        setPersons(persons.filter(p => p.id !== idPerson))//elimina el contacto de la lista
+                        setNewName('')
+                        setNewNumber('')
+                        setTimeout(() => {
+                            setMessage(null)//limpia el mensaje de error despues de 5 segundos
+                        }, 5000)
+                    }
+                )
         } else {
             //crea nuevo contacto
             personService.create(newPerson)
@@ -174,11 +187,9 @@ const App = () => {
             setTypeMessage('success')
             setTimeout(() => {
                 setMessage(null)
-            },5000)
+            }, 5000)
         }
     }//1.86 m vencido
-
-
 
     return (
         <div>
@@ -195,8 +206,6 @@ const App = () => {
             />
             <h2>Numbers</h2>
             <PersonsList persons={persons} findName={findName} deletePersons={deletePersonOf}/>
-
-
         </div>
     )
 
