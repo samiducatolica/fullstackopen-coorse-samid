@@ -2,7 +2,7 @@ import {useState, useEffect} from 'react'
 import countriServices from "./services/countriServices.js";
 
 
-const CountriList = ({search, countries}) => {
+const CountriList = ({search, countries, handleButton}) => {
     //Mas de 10 paises mensaje Too many matches, specify another filter
     // Menos de 10 paises mostrar los paises mas de uno mostrar los paises en una lista
     // Si hay un solo pais mostrar los datos del pais(nombre, capital, area, bandera, poblacion, lenguajes)
@@ -29,6 +29,7 @@ const CountriList = ({search, countries}) => {
                         {filterdCounties.map((country) => (
                             <li key={country.cca3}>
                                 {country.name.common}
+                                <button onClick={() => handleButton(country)}>Show</button>
                             </li>
                         ))}
                     </ul>
@@ -57,6 +58,10 @@ const CountriList = ({search, countries}) => {
     }
 }
 
+const CountriButton =({country, onClick}) => {
+
+}
+
 function App() {
     const [countriList, setcountriList] = useState(null)
     const [search, setSearch] = useState('')
@@ -74,6 +79,11 @@ function App() {
     const handleChangue = (event) => {
         setSearch(event.target.value)
     }
+    const handleButton = (country) => {
+        console.log('id', country.name.common);
+        setSearch(country.name.common);
+        document.getElementById('countri').value = country.name.common;
+    }
 
     return (
         <>
@@ -83,7 +93,7 @@ function App() {
                 <input id="countri" type="text" onChange={handleChangue}/>
             </div>
             <div>
-                <CountriList search={search} countries={countriList}/>
+                <CountriList search={search} countries={countriList} handleButton={handleButton}/>
             </div>
         </>
     )
