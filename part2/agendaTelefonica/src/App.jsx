@@ -1,5 +1,5 @@
 import {useState, useEffect} from "react";
-import axios from "axios";
+import personService from './services/persons.js'
 
 const FormNewPerson = (props) => {
     return (
@@ -38,20 +38,26 @@ const Name = (props) => {
     // console.log('Comp Name', props);
     return (
         <div>
-            <p>{props.name} - {props.telefono} </p>
-
+            {props.name} - {props.telefono}
+            <button onClick={props.deletePerson}>Borrar</button>
         </div>
     )
 }
 
-const PersonsList = ({persons, findName}) => {
+const PersonsList = ({persons, findName, deletePersons}) => {
     if (!findName) {
-        // console.log('No hay nombre para filtrar');
-        console.log('FilteredPersons', persons, findName);
         return (
             <div>
                 <strong>Debug</strong>:
-                {persons.map((person) => (<Name key={person.id} name={person.name} telefono={person.number}/>))}
+                {persons.map((person) => (
+                    <Name key={person.id}
+                          name={person.name}
+                          telefono={person.number}
+                          deletePerson={() => deletePersons(person.id)}
+                    />
+                ))
+                }
+
             </div>
         )
     } else {
@@ -66,17 +72,42 @@ const PersonsList = ({persons, findName}) => {
     }
 }
 
-const App = () => {
-    const [persons, setPersons] = useState([ ])
+const Notification = ({message, tipeMessage}) => {
+    if (message === null) {
+        return null
+    }
+    return (
+        <div className={tipeMessage}>
+            {message}
+        </div>
+    )
+}
 
+const App = () => {
+    const [persons, setPersons] = useState([])
     const [newName, setNewName] = useState('');
     const [newNumber, setNewNumber] = useState('');
     const [findName, setFindName] = useState('');
+    const [message, setMessage] = useState(null);
+    const [typeMessage, setTypeMessage] = useState('')
 
-    const personasApi =() => {
-        axios.get('http://localhost:3001/persons')
-            .then((respuesta) =>{
-                setPersons(respuesta.data)
+
+    const deletePersonOf = (id) => {
+        if (window.confirm('¿Seguro que quieres borrar este contacto?')) {
+            personService.remove(id)
+                .then(respose => {
+                    console.log('Respuesta de la API al borrar:', respose);
+                    setPersons(persons.filter(persons => persons.id !== id))
+                })
+        }
+
+    }
+
+    const personasApi = () => {
+        personService.getAll()
+            .then((respuesta) => {
+                // console.log('Respuesta de la API:', respuesta);
+                setPersons(respuesta)
             })
     }
 
@@ -104,22 +135,59 @@ const App = () => {
     //Envio y validacion de formulario
     const handleNameSubmit = (event) => {
         event.preventDefault();
-        const NewPerson = {
+        const newPerson = {
             name: newName,
             number: newNumber,
-            id: persons.length + 1
         }
         //variable de validacion
-        const validation = persons.findIndex(p => p.name === NewPerson.name);
+        const validation = persons.findIndex(p => p.name === newPerson.name);
 
         //validacion de nombre
         if (validation !== -1) {
-            alert(`${NewPerson.name} ya existe en el ditectorio`);
+            //obtierne el id de la persona en bd
+            const idPerson = persons[validation].id
+
+            confirm(`${newPerson.name} ya existe en el ditectorio
+            ¿Desea actualizar el número de ${newPerson.name}?`) &&
+
+            //actualiza el numero de telefono
+            personService.update(newPerson, idPerson)
+                .then(respuesta => {
+                    // console.log('Respuesta de la API al actualizar:', respuesta)
+                    setPersons(persons.map(p => p.id !== idPerson ? p : respuesta))
+                    setNewName('')
+                    setNewNumber('')
+                    setMessage('Número actualizado correctamente')
+                    setTypeMessage('success')
+                    setTimeout(() => {
+                        setMessage(null)//limpia el mensaje de error despues de 5 segundos
+                    }, 5000)
+                })
+                .catch(error => {
+                        setTypeMessage('error')
+                        setMessage(`Error: ${newPerson.name} ya se encuentra eliminado de la base de datos`)
+                        setPersons(persons.filter(p => p.id !== idPerson))//elimina el contacto de la lista
+                        setNewName('')
+                        setNewNumber('')
+                        setTimeout(() => {
+                            setMessage(null)//limpia el mensaje de error despues de 5 segundos
+                        }, 5000)
+                    }
+                )
         } else {
             //crea nuevo contacto
-            setPersons(persons.concat(NewPerson));
+            personService.create(newPerson)
+                .then(respuesta => {
+                    // console.log('Respuesta de la API al crear:', respuesta.data);
+                    setPersons(persons.concat(respuesta))
+                })
             setNewName('')
             setNewNumber('');
+            setMessage('Contacto creado correctamente')
+            setTypeMessage('success')
+            setTimeout(() => {
+                setMessage(null)
+            }, 5000)
         }
     }//1.86 m vencido
 
@@ -128,6 +196,7 @@ const App = () => {
             <h2>Phonebook</h2>
             <Filter findName={findName} handleFindChange={handleFindChange}/>
             <h2>Agregar un nuevo registro</h2>
+            <Notification message={message} tipeMessage={typeMessage}/>
             <FormNewPerson
                 newName={newName}
                 newNumber={newNumber}
@@ -136,9 +205,7 @@ const App = () => {
                 handleNameSubmit={handleNameSubmit}
             />
             <h2>Numbers</h2>
-            <PersonsList persons={persons} findName={findName}/>
-
-
+            <PersonsList persons={persons} findName={findName} deletePersons={deletePersonOf}/>
         </div>
     )
 
