@@ -1,5 +1,8 @@
 const express = require('express')
+const {request, response} = require("express");
 const app = express()
+
+app.use(express.json())
 
 let notes = [
    {
@@ -35,9 +38,41 @@ app.get('/api/notes/:id',(request,response)=>{
     }else{
         response.status(404).end()
     }
-    
 })
 
+app.delete('/api/notes/:id',(request,response)=>{
+    const id = Number(request.params.id)
+    notes = notes.filter(note =>note.id !== id)
+
+    response.status(204).end()
+})
+const generateId=()=>{
+    const maxId = notes.length > 0
+        ? Math.max(...notes.map(n=>n.id))
+        :0
+    return maxId +1
+}
+
+app.post('/api/notes',(request,response)=>{
+    const body = request.body
+    // console.log("Body \n",request.body)
+
+    if(!body.content){
+        return response.status(400).json({
+            error: 'Content cannot be empty'
+        })
+    }
+
+    const newNote = {
+        content: body.content,
+        important: Boolean(body.important) || false,
+        id: generateId(),
+    }
+
+    notes = notes.concat(newNote)
+
+    response.json(newNote)
+})
 
 const PORT = 3001
 app.listen(PORT)

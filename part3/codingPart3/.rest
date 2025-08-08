@@ -1,0 +1,21 @@
+POST http://localhost:80/api/item
+Content-Type: application/json
+
+{"conten":
+
+}
+
+###
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+
+{
+  "content": "Postman es good in testing backend",
+  "important": true
+}
+
+
+###
+http://localhost:3001/api/notes
+
+
