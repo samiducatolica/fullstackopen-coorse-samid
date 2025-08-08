@@ -1,7 +1,3 @@
-part2/codingPart2/.idea/
-part2/agendaTelefonica/.vite/
-part2/codingPart2/node_modules/
-<<<<<<< HEAD
 part2/agendaTelefonica/.vite/
 part1/anecdotes/.idea/*
 part1/anecdotes/node_modules/*
@@ -13,6 +9,5 @@ part2/codingPart2/.vite/*
 part2/codingPart2/node_modules/*
 part2/courseInfo/.idea/*
 refs/heads/unicafe
-=======
 part2/countries/.env
->>>>>>> refs/heads/Part2
+part3/codingPart3/.idea/*
