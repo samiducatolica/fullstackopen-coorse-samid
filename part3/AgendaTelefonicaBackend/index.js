@@ -12,10 +12,11 @@ let persons = [
         "id": 4, "name": "Mary Poppendieck", "number": "39-23-6423122"
     }
 ]
+
 app.get('/api/persons',(request,response)=>{
-    console.log('GET /api/persons');
     response.json(persons)
 })
+
 app.get('/api/persons/:id',(request,response)=>{
     const id = Number( request.params.id);
     const persona = persons.find(person=>person.id === id);
@@ -25,7 +26,15 @@ app.get('/api/persons/:id',(request,response)=>{
     }else {
         response.status(404).end('Not Found')
     }
+})
 
+app.delete('/api/persons/:id',(request,response)=>{
+    const id = Number( request.params.id);
+    const persona = persons.find(person=>person.id === id);
+    if(persona){
+        persons= persons.filter(person=>person.id !== id);
+        response.status(204).end()
+    }
 })
 
 app.get('/info',(request,response)=>{
