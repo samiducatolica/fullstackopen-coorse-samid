@@ -11,3 +11,5 @@ part2/courseInfo/.idea/*
 refs/heads/unicafe
 part2/countries/.env
 part3/codingPart3/.idea/*
+part3/AgendaTelefonicaBackend/.idea/*
+part3/AgendaTelefonicaBackend/node_modules/*
