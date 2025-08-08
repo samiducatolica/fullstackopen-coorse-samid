@@ -16,6 +16,17 @@ app.get('/api/persons',(request,response)=>{
     console.log('GET /api/persons');
     response.json(persons)
 })
+app.get('/api/persons/:id',(request,response)=>{
+    const id = Number( request.params.id);
+    const persona = persons.find(person=>person.id === id);
+
+    if(persona){
+       response.json(persona)
+    }else {
+        response.status(404).end('Not Found')
+    }
+
+})
 
 app.get('/info',(request,response)=>{
     const peronsTotal= persons.length
