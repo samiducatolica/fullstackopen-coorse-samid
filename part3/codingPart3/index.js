@@ -2,6 +2,7 @@ const express = require('express')
 const {request, response} = require("express");
 const app = express()
 const cors = require('cors')
+app.use(express.static('dist')) //Sirve los archivos estaticos de la carpeta dist
 
 app.use(cors())//Activa CORS para todas las rutas
 
